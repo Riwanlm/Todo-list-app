@@ -1,5 +1,6 @@
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { TodoForm } from "./TodoForm";
+import { TodoItem } from "./TodoItem";
 
 export type Todo = {
   id: number;
@@ -95,90 +96,15 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="bg-gray-700 p-6 rounded-lg">
-        <div>
-          <fieldset className="fieldset mb-2">
-            <legend className="fieldset-legend text-xl">
-              Ajoutez un nouveau todo:
-            </legend>
-            <div className="join">
-              <input
-                type="text"
-                className="input rounded-md bg-gray-600"
-                placeholder="Entrez votre texte"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    addTodo(value);
-                    setValue("");
-                  }
-                }}
-              />
-              <button
-                className="btn btn-accent ml-3 rounded-lg"
-                onClick={() => {
-                  addTodo(value);
-                  setValue("");
-                }}
-              >
-                <Plus size={20} className="text-white" />
-              </button>
-            </div>
-          </fieldset>
-          <div className="divider divider-accent">Liste</div>
-          <ul className="list-none mt-2">
-            {todos.length !== 0 ? (
-              todos.map((todo) => (
-                <li
-                  key={todo.id}
-                  className="flex items-center gap-2 mb-2 bg-gray-600 rounded-lg p-1"
-                >
-                  <input
-                    className="checkbox checkbox-sm "
-                    type="checkbox"
-                    checked={todo.isChecked}
-                    onChange={() => {
-                      const newChecked = !todo.isChecked;
-                      updateTodo(todo.id, {
-                        ...todo,
-                        isChecked: newChecked,
-                      });
-                    }}
-                  />
-                  <input
-                    type="text"
-                    defaultValue={todo.name}
-                    disabled={todo.isChecked}
-                    className={
-                      todo.isChecked
-                        ? "line-through text-green-200"
-                        : " text-red-200"
-                    }
-                    onBlur={(e) => {
-                      const newValue = e.target.value;
-                      updateTodo(todo.id, {
-                        ...todo,
-                        name: newValue,
-                      });
-                    }}
-                  />
-                  <button
-                    className="btn btn-accent ml-3 rounded-lg"
-                    onClick={() => {
-                      deleteTodo(todo);
-                    }}
-                  >
-                    <Trash2 size={20} className="text-white" />
-                  </button>
-                </li>
-              ))
-            ) : (
-              <p className="text-accent">
-                Ajoutez de nouveaux todos à votre liste !
-              </p>
-            )}
-          </ul>
-        </div>
+        <TodoForm value={value} setValue={setValue} addTodo={addTodo} />
+        <div className="divider divider-accent">Liste</div>
+        <ul className="list-none mt-2">
+          <TodoItem
+            todos={todos}
+            updateTodo={updateTodo}
+            deleteTodo={deleteTodo}
+          />
+        </ul>
       </div>
     </div>
   );
